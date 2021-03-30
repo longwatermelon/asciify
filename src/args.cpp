@@ -33,9 +33,7 @@ void help()
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	SetConsoleTextAttribute(console, 14);
-	std::cout << "image to ascii art tool\n\n";
-	SetConsoleTextAttribute(console, 7);
+	print_colored("image to ascii art tool", 14);
 
 	std::cout << "asciify make <image path> <args>: create ascii art from an image\n";
 }
@@ -58,11 +56,28 @@ void cmd_make(int argc, char** argv)
 {
 	if (argc >= 3)
 		args::path = argv_get(argc, argv, 2);
+	else
+	{
+		help_make();
+		exit(1);
+	}
 
 	if (args::path == "--help")
 	{
 		help_make();
 		exit(0);
+	}
+
+	{
+		std::ifstream temp(args::path);
+
+		if (!temp)
+		{
+			print_error("file doesnt exist");
+			exit(1);
+		}
+
+		temp.close();
 	}
 
 	int i = 3;
@@ -122,12 +137,7 @@ void cmd_make(int argc, char** argv)
 
 void help_make()
 {
-	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	SetConsoleTextAttribute(console, 14);
-	std::cout << "make help\n\n";
-	SetConsoleTextAttribute(console, 7);
-
+	print_colored("make help", 14);
 	std::cout << "-f <filename>: write ascii output to a file\n";
 	std::cout << "-s <size>: set image size to <size>x<size>\n";
 	std::cout << "-w  <width>: set image width to <width>\n";
@@ -155,5 +165,15 @@ void print_error(const std::string& err)
 
 	SetConsoleTextAttribute(console, 4);
 	std::cout << "error: " << err << "\n";
+	SetConsoleTextAttribute(console, 7);
+}
+
+
+void print_colored(const std::string& text, DWORD color)
+{
+	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	SetConsoleTextAttribute(console, color);
+	std::cout << text << "\n";
 	SetConsoleTextAttribute(console, 7);
 }
