@@ -45,7 +45,8 @@ int main(int argc, char** argv)
 	bool write_to_file = false;
 	std::string filename;
 
-	int img_size = 44;
+	int img_w = 44;
+	int img_h = 44;
 
 	for (int i = 0; i < argc; ++i)
 	{
@@ -57,14 +58,21 @@ int main(int argc, char** argv)
 
 		if (strcmp(argv[i], "-s") == 0)
 		{
-			std::stringstream(argv[++i]) >> img_size;
+			std::stringstream(argv[++i]) >> img_w;
+			img_h = img_w;
 		}
+
+		if (strcmp(argv[i], "-w") == 0)
+			std::stringstream(argv[++i]) >> img_w;
+
+		if (strcmp(argv[i], "-h") == 0)
+			std::stringstream(argv[++i]) >> img_h;
 	}
 
 	cv::Mat imgtemp = cv::imread(path);
 	cv::Mat img;
 
-	cv::resize(imgtemp, img, cv::Size(img_size, img_size));
+	cv::resize(imgtemp, img, cv::Size(img_w, img_h));
 	
 
 	std::vector<int> intensities;
