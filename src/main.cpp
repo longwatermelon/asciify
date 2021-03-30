@@ -11,6 +11,13 @@ void generate_ascii(const std::vector<int>& intensities, int xmax, int ymax, boo
 {
 	std::string image;
 
+	std::fstream f;
+	
+	if (write_to_file)
+	{
+		f.open(filename, std::ofstream::out | std::ofstream::trunc);
+	}
+
 	for (int i = 0; i < intensities.size(); ++i)
 	{
 		if (intensities[i] >= 210) image += '@';
@@ -20,16 +27,24 @@ void generate_ascii(const std::vector<int>& intensities, int xmax, int ymax, boo
 		else if (intensities[i] >= 70) image += '.';
 		else image += ' ';
 
-		if (i % xmax == 0) image += "\n";
+		if (i % xmax == 0)
+		{
+			if (write_to_file)
+			{
+				f << image << "\n";
+				image.clear();
+			}
+			else
+			{
+				image += "\n";
+			}
+		}
 	}
+
+	f.close();
 
 	if (write_to_file)
 	{
-		std::fstream f;
-		f.open(filename, std::ofstream::out | std::ofstream::trunc);
-		f << image;
-		f.close();
-
 		std::cout << "Wrote output to " << filename << "\n";
 	}
 	else
