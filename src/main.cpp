@@ -64,7 +64,5 @@ int main(int argc, char** argv)
 
 	generate_ascii(intensities, img.cols, img.rows);
 
-	std::cin.get();
-
 	return 0;
 }
