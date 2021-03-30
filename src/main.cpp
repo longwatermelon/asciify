@@ -108,7 +108,16 @@ void parse_args(int argc, char** argv)
 		}
 
 		else if (strcmp(argv[i], "--open") == 0)
+		{
 			args::open = true;
+			++i;
+		}
+
+		else if (strcmp(argv[i], "--help") == 0)
+		{
+			help();
+			exit(0);
+		}
 
 		else
 		{
@@ -157,7 +166,7 @@ void generate_ascii(const std::vector<int>& intensities)
 
 	if (args::write_to_file)
 	{
-		std::cout << "Wrote output to " << args::filename << "\n";
+		std::cout << "wrote output to " << args::filename << "\n";
 
 		if (args::open)
 		{
