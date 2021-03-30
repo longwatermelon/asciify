@@ -7,7 +7,7 @@
 #include <opencv2/imgproc.hpp>
 
 
-void generate_ascii(const std::vector<int>& intensities, int xmax, int ymax)
+void generate_ascii(const std::vector<int>& intensities, int xmax, int ymax, bool write_to_file, const std::string& filename)
 {
 	std::string image;
 
@@ -22,24 +22,49 @@ void generate_ascii(const std::vector<int>& intensities, int xmax, int ymax)
 		if (i % xmax == 0) image += "\n";
 	}
 
-	std::fstream f;
-	f.open("output.txt", std::ofstream::out | std::ofstream::trunc);
-	f << image;
-	f.close();
+	if (write_to_file)
+	{
+		std::fstream f;
+		f.open(filename, std::ofstream::out | std::ofstream::trunc);
+		f << image;
+		f.close();
 
-	std::cout << image << "\n";
-
-	std::cout << "Wrote output to images/output.txt\n";
+		std::cout << "Wrote output to " << filename << "\n";
+	}
+	else
+	{
+		std::cout << image << "\n";
+	}
 }
 
 
 int main(int argc, char** argv)
 {
 	std::string path = argv[1];
+
+	bool write_to_file = false;
+	std::string filename;
+
+	int img_size = 44;
+
+	for (int i = 0; i < argc; ++i)
+	{
+		if (strcmp(argv[i], "-f") == 0)
+		{
+			write_to_file = true;
+			filename = argv[++i];
+		}
+
+		if (strcmp(argv[i], "-s") == 0)
+		{
+			std::stringstream(argv[++i]) >> img_size;
+		}
+	}
+
 	cv::Mat imgtemp = cv::imread(path);
 	cv::Mat img;
 
-	cv::resize(imgtemp, img, cv::Size(50, 50));
+	cv::resize(imgtemp, img, cv::Size(img_size, img_size));
 	
 
 	std::vector<int> intensities;
@@ -62,7 +87,7 @@ int main(int argc, char** argv)
 		}
 	}
 
-	generate_ascii(intensities, img.cols, img.rows);
+	generate_ascii(intensities, img.cols, img.rows, write_to_file, filename);
 
 	return 0;
 }
