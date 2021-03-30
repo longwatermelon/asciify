@@ -5,8 +5,6 @@
 
 namespace args
 {
-	inline HANDLE h_console = GetStdHandle(STD_OUTPUT_HANDLE);
-
 	inline bool open = false;
 
 	inline std::string path;
@@ -29,3 +27,5 @@ void cmd_make(int argc, char** argv);
 void help_make();
 
 std::string argv_get(int argc, char** argv, int i);
+
+void print_error(const std::string& err);

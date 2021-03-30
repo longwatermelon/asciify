@@ -23,7 +23,7 @@ void parse_args(int argc, char** argv)
 	}
 	else
 	{
-		std::cout << "unrecognized command: " << argv[1] << "\n";
+		print_error("unrecognized command '" + std::string(argv[1]) + "'");
 		exit(1);
 	}
 }
@@ -31,7 +31,12 @@ void parse_args(int argc, char** argv)
 
 void help()
 {
+	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	SetConsoleTextAttribute(console, 14);
 	std::cout << "image to ascii art tool\n\n";
+	SetConsoleTextAttribute(console, 7);
+
 	std::cout << "asciify make <image path> <args>: create ascii art from an image\n";
 }
 
@@ -40,7 +45,8 @@ std::string next_arg(int argc, char** argv, int& i)
 {
 	if (++i >= argc)
 	{
-		std::cout << argv[i - 1] << ": missing required argument\n";
+		print_error(std::string(argv[i - 1]) + ": missing required argument");
+
 		exit(1);
 	}
 
@@ -86,7 +92,7 @@ void cmd_make(int argc, char** argv)
 
 			if (args::resize_percent <= 0)
 			{
-				std::cout << "can't resize to 0% or less\n";
+				print_error("cant resize to 0% or less");
 				exit(1);
 			}
 
@@ -107,7 +113,7 @@ void cmd_make(int argc, char** argv)
 
 		else
 		{
-			std::cout << "unrecognized argument: " << argv[i] << "\n";
+			print_error("unrecognized argument '" + std::string(argv[i]) + "'");
 			exit(1);
 		}
 	}
@@ -116,7 +122,12 @@ void cmd_make(int argc, char** argv)
 
 void help_make()
 {
+	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	SetConsoleTextAttribute(console, 14);
 	std::cout << "make help\n\n";
+	SetConsoleTextAttribute(console, 7);
+
 	std::cout << "-f <filename>: write ascii output to a file\n";
 	std::cout << "-s <size>: set image size to <size>x<size>\n";
 	std::cout << "-w  <width>: set image width to <width>\n";
@@ -130,9 +141,19 @@ std::string argv_get(int argc, char** argv, int i)
 {
 	if (i >= argc)
 	{
-		std::cout << "expected argument for: " << argv[i - 1] << "\n";
+		print_error("expected argument for " + std::string(argv[i - 1]));
 		exit(1);
 	}
 
 	return argv[i];
+}
+
+
+void print_error(const std::string& err)
+{
+	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	SetConsoleTextAttribute(console, 4);
+	std::cout << "error: " << err << "\n";
+	SetConsoleTextAttribute(console, 7);
 }
