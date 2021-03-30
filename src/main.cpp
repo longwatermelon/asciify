@@ -13,10 +13,11 @@ void generate_ascii(const std::vector<int>& intensities, int xmax, int ymax, boo
 
 	for (int i = 0; i < intensities.size(); ++i)
 	{
-		if (intensities[i] >= 200) image += '@';
-		else if (intensities[i] >= 150) image += '#';
-		else if (intensities[i] >= 100) image += '=';
-		else if (intensities[i] >= 50) image += ':';
+		if (intensities[i] >= 210) image += '@';
+		else if (intensities[i] >= 170) image += '#';
+		else if (intensities[i] >= 130) image += '=';
+		else if (intensities[i] >= 100) image += ':';
+		else if (intensities[i] >= 70) image += '.';
 		else image += ' ';
 
 		if (i % xmax == 0) image += "\n";
