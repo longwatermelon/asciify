@@ -18,6 +18,8 @@ namespace args
 
 	int img_w = 0;
 	int img_h = 0;
+
+	float resize_percent = 1.f;
 }
 
 
@@ -92,19 +94,15 @@ void parse_args(int argc, char** argv)
 
 		else if (strcmp(argv[i], "-rs") == 0)
 		{
-			float resize_percent;
-			std::stringstream(next_arg(argc, argv, i)) >> resize_percent;
+			std::stringstream(next_arg(argc, argv, i)) >> args::resize_percent;
 
-			if (resize_percent <= 0)
+			if (args::resize_percent <= 0)
 			{
 				std::cout << "can't resize to 0% or less\n";
-				exit(0);
+				exit(1);
 			}
 
-			resize_percent /= 100.f;
-
-			args::img_w *= resize_percent;
-			args::img_h *= resize_percent;
+			args::resize_percent /= 100.f;
 		}
 
 		else if (strcmp(argv[i], "--open") == 0)
@@ -193,9 +191,9 @@ int main(int argc, char** argv)
 
 	cv::Mat imgtemp = cv::imread(args::path);
 
-	if (args::img_w == 0) args::img_w = imgtemp.cols;
-	if (args::img_h == 0) args::img_h = imgtemp.rows;
-
+	args::img_w = (int)(imgtemp.cols * args::resize_percent);
+	args::img_h = (int)(imgtemp.rows * args::resize_percent);
+	
 	args::img_h /= 2;
 
 	cv::Mat img;
