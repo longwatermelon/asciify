@@ -10,8 +10,6 @@
 
 std::vector<int> asciify::generate_greyscale(int argc, char** argv)
 {
-	args::parse_args(argc, argv);
-
 	cv::Mat imgtemp = cv::imread(args::image::image_path);
 
 	if (args::image::img_w == 0)
@@ -112,7 +110,7 @@ void asciify::generate_ascii(const std::vector<int>& intensities)
 }
 
 
-void asciify::generate_video(const std::vector<std::vector<int>>& frames)
+void asciify::generate_video()
 {
-
+	std::vector<std::vector<int>> frames;
 }

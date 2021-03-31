@@ -8,5 +8,5 @@ namespace asciify
 
 	void generate_ascii(const std::vector<int>& intensities);
 
-	void generate_video(const std::vector<std::vector<int>>& frames);
+	void generate_video();
 }

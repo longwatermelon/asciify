@@ -1,4 +1,5 @@
 #include "../include/args.h"
+#include "../include/asciify.h"
 #include <fstream>
 #include <sstream>
 #include <Windows.h>
@@ -20,6 +21,7 @@ void args::parse_args(int argc, char** argv)
 	else if (strcmp(argv[1], "image") == 0)
 	{
 		cmd_image(argc, argv);
+		asciify::generate_ascii(asciify::generate_greyscale(argc, argv));
 	}
 	else
 	{

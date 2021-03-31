@@ -21,6 +21,12 @@ namespace args
 	}
 
 
+	namespace video
+	{
+		inline std::string video_path;
+	}
+
+
 	void parse_args(int argc, char** argv);
 
 	void help();
