@@ -55,21 +55,21 @@ std::string args::next_arg(int argc, char** argv, int& i)
 void args::cmd_image(int argc, char** argv)
 {
 	if (argc >= 3)
-		args::path = argv_get(argc, argv, 2);
+		image::image_path = argv_get(argc, argv, 2);
 	else
 	{
 		help_image();
 		exit(1);
 	}
 
-	if (args::path == "--help")
+	if (image::image_path == "--help")
 	{
 		help_image();
 		exit(0);
 	}
 
 	{
-		std::ifstream temp(args::path);
+		std::ifstream temp(image::image_path);
 
 		if (!temp)
 		{
@@ -85,38 +85,38 @@ void args::cmd_image(int argc, char** argv)
 	{
 		if (strcmp(argv[i], "-f") == 0)
 		{
-			args::write_to_file = true;
-			args::filename = next_arg(argc, argv, i);
+			image::write_to_file = true;
+			image::output_path = next_arg(argc, argv, i);
 		}
 
 		else if (strcmp(argv[i], "-s") == 0)
 		{
-			std::stringstream(next_arg(argc, argv, i)) >> args::img_w;
-			args::img_h = args::img_w;
+			std::stringstream(next_arg(argc, argv, i)) >> image::img_w;
+			image::img_h = image::img_w;
 		}
 
 		else if (strcmp(argv[i], "-w") == 0)
-			std::stringstream(next_arg(argc, argv, i)) >> args::img_w;
+			std::stringstream(next_arg(argc, argv, i)) >> image::img_w;
 
 		else if (strcmp(argv[i], "-h") == 0)
-			std::stringstream(next_arg(argc, argv, i)) >> args::img_h;
+			std::stringstream(next_arg(argc, argv, i)) >> image::img_h;
 
 		else if (strcmp(argv[i], "-rs") == 0)
 		{
-			std::stringstream(next_arg(argc, argv, i)) >> args::resize_percent;
+			std::stringstream(next_arg(argc, argv, i)) >> image::resize_percent;
 
-			if (args::resize_percent <= 0)
+			if (image::resize_percent <= 0)
 			{
 				print_error("cant resize to 0% or less");
 				exit(1);
 			}
 
-			args::resize_percent /= 100.f;
+			image::resize_percent /= 100.f;
 		}
 
 		else if (strcmp(argv[i], "--open") == 0)
 		{
-			args::open = true;
+			image::open = true;
 			++i;
 		}
 

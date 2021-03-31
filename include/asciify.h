@@ -5,5 +5,8 @@
 namespace asciify
 {
 	std::vector<int> generate_greyscale(int argc, char** argv);
+
 	void generate_ascii(const std::vector<int>& intensities);
+
+	void generate_video(const std::vector<std::vector<int>>& frames);
 }
