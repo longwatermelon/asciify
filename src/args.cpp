@@ -4,7 +4,7 @@
 #include <Windows.h>
 
 
-void parse_args(int argc, char** argv)
+void args::parse_args(int argc, char** argv)
 {
 	if (argc == 1)
 	{
@@ -29,7 +29,7 @@ void parse_args(int argc, char** argv)
 }
 
 
-void help()
+void args::help()
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -39,7 +39,7 @@ void help()
 }
 
 
-std::string next_arg(int argc, char** argv, int& i)
+std::string args::next_arg(int argc, char** argv, int& i)
 {
 	if (++i >= argc)
 	{
@@ -52,7 +52,7 @@ std::string next_arg(int argc, char** argv, int& i)
 }
 
 
-void cmd_image(int argc, char** argv)
+void args::cmd_image(int argc, char** argv)
 {
 	if (argc >= 3)
 		args::path = argv_get(argc, argv, 2);
@@ -135,7 +135,7 @@ void cmd_image(int argc, char** argv)
 }
 
 
-void help_image()
+void args::help_image()
 {
 	print_colored("image help", 6);
 	std::cout << "-f <filename>: write ascii output to a file\n";
@@ -147,7 +147,7 @@ void help_image()
 }
 
 
-std::string argv_get(int argc, char** argv, int i)
+std::string args::argv_get(int argc, char** argv, int i)
 {
 	if (i >= argc)
 	{
@@ -159,7 +159,7 @@ std::string argv_get(int argc, char** argv, int i)
 }
 
 
-void print_error(const std::string& err)
+void args::print_error(const std::string& err)
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -169,7 +169,7 @@ void print_error(const std::string& err)
 }
 
 
-void print_colored(const std::string& text, DWORD color)
+void args::print_colored(const std::string& text, DWORD color)
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 

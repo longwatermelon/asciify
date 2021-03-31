@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv)
 {
-	generate_ascii(generate_greyscale(argc, argv));
+	asciify::generate_ascii(asciify::generate_greyscale(argc, argv));
 
 	return 0;
 }

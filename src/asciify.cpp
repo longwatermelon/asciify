@@ -8,9 +8,9 @@
 #include <opencv2/imgproc.hpp>
 
 
-std::vector<int> generate_greyscale(int argc, char** argv)
+std::vector<int> asciify::generate_greyscale(int argc, char** argv)
 {
-	parse_args(argc, argv);
+	args::parse_args(argc, argv);
 
 	cv::Mat imgtemp = cv::imread(args::path);
 
@@ -49,7 +49,7 @@ std::vector<int> generate_greyscale(int argc, char** argv)
 }
 
 
-void generate_ascii(const std::vector<int>& intensities)
+void asciify::generate_ascii(const std::vector<int>& intensities)
 {
 	std::string image;
 
@@ -108,6 +108,6 @@ void generate_ascii(const std::vector<int>& intensities)
 
 	if ((args::img_w >= 120 || args::img_h >= 200) && !args::write_to_file)
 	{
-		print_colored("ascii output is very large, run asciify image --help for more information", 6);
+		args::print_colored("ascii output is very large, run asciify image --help for more information", 6);
 	}
 }
