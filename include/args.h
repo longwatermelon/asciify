@@ -23,8 +23,8 @@ void parse_args(int argc, char** argv);
 void help();
 std::string next_arg(int argc, char** argv, int& i);
 
-void cmd_make(int argc, char** argv);
-void help_make();
+void cmd_image(int argc, char** argv);
+void help_image();
 
 std::string argv_get(int argc, char** argv, int i);
 

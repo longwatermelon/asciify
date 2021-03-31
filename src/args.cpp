@@ -17,9 +17,9 @@ void parse_args(int argc, char** argv)
 		help();
 		exit(0);
 	}
-	else if (strcmp(argv[1], "make") == 0)
+	else if (strcmp(argv[1], "image") == 0)
 	{
-		cmd_make(argc, argv);
+		cmd_image(argc, argv);
 	}
 	else
 	{
@@ -33,9 +33,9 @@ void help()
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	print_colored("image to ascii art tool", 14);
+	print_colored("multimedia to ascii art tool", 6);
 
-	std::cout << "asciify make <image path> <args>: create ascii art from an image\n";
+	std::cout << "asciify image <image path> <args>: create ascii art from an image\n";
 }
 
 
@@ -52,19 +52,19 @@ std::string next_arg(int argc, char** argv, int& i)
 }
 
 
-void cmd_make(int argc, char** argv)
+void cmd_image(int argc, char** argv)
 {
 	if (argc >= 3)
 		args::path = argv_get(argc, argv, 2);
 	else
 	{
-		help_make();
+		help_image();
 		exit(1);
 	}
 
 	if (args::path == "--help")
 	{
-		help_make();
+		help_image();
 		exit(0);
 	}
 
@@ -122,7 +122,7 @@ void cmd_make(int argc, char** argv)
 
 		else if (strcmp(argv[i], "--help") == 0)
 		{
-			help_make();
+			help_image();
 			exit(0);
 		}
 
@@ -135,9 +135,9 @@ void cmd_make(int argc, char** argv)
 }
 
 
-void help_make()
+void help_image()
 {
-	print_colored("make help", 14);
+	print_colored("image help", 6);
 	std::cout << "-f <filename>: write ascii output to a file\n";
 	std::cout << "-s <size>: set image size to <size>x<size>\n";
 	std::cout << "-w  <width>: set image width to <width>\n";

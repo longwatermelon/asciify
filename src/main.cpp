@@ -50,7 +50,7 @@ void generate_ascii(const std::vector<int>& intensities)
 
 		if (args::open)
 		{
-			std::string command = ".\\" + args::filename;
+			std::string command = args::filename;
 			system(command.c_str());
 		}
 	}
@@ -73,8 +73,10 @@ int main(int argc, char** argv)
 
 	cv::Mat imgtemp = cv::imread(args::path);
 
-	args::img_w = (int)(imgtemp.cols * args::resize_percent);
-	args::img_h = (int)(imgtemp.rows * args::resize_percent);
+	if (args::img_w == 0)
+		args::img_w = (int)(imgtemp.cols * args::resize_percent);
+	if (args::img_h == 0)
+		args::img_h = (int)(imgtemp.rows * args::resize_percent);
 	
 	args::img_h /= 2;
 
@@ -104,9 +106,9 @@ int main(int argc, char** argv)
 
 	generate_ascii(intensities);
 
-	if ((img.cols >= 200 || img.rows >= 200) && !args::write_to_file)
+	if ((img.cols >= 120 || img.rows >= 200) && !args::write_to_file)
 	{
-		std::cout << "ascii output is very large, use -f to write the output to a file. run asciify --help for more information\n";
+		print_colored("ascii output is very large, run asciify image --help for more information", 6);
 	}
 
 	return 0;
