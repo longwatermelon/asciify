@@ -86,6 +86,8 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 
 		if (f)
 		{
+			size_t read_frames = 0;
+
 			std::stringstream ss;
 			std::string line;
 
@@ -107,8 +109,12 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 
 					ss.clear();
 					ss.str("");
+
+					std::cout << "\rread " << ++read_frames << " frames";
 				}
 			}
+
+			std::cout << "\n";
 
 			f.close();
 
