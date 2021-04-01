@@ -22,14 +22,38 @@ void args::parse_args(int argc, char** argv)
 		help();
 		exit(0);
 	}
+
 	else if (strcmp(argv[1], "image") == 0)
 	{
 		image::active = true;
 		cmd_image(argc, argv);
 
 		cv::Mat img = cv::imread(image::image_path);
-		asciify::generate_ascii(asciify::generate_greyscale(argc, argv, img));
+		
+		if (args::image::write_to_file)
+		{
+			std::fstream f(args::image::output_path, std::ofstream::out | std::ofstream::trunc);
+			f << asciify::generate_ascii(asciify::generate_greyscale(argc, argv, img), args::image::img_w);
+			f.close();
+
+			std::cout << "wrote output to " << args::image::output_path << "\n";
+
+			if (args::image::open)
+			{
+				system(args::image::output_path.c_str());
+			}
+		}
+		else
+		{
+			std::cout << asciify::generate_ascii(asciify::generate_greyscale(argc, argv, img), args::image::img_w) << "\n";
+
+			if (args::image::img_w >= 120 || args::image::img_h >= 200)
+			{
+				utils::print_colored("ascii output is very large, run asciify image --help for more information", 6);
+			}
+		}
 	}
+
 	else
 	{
 		utils::print_error("unrecognized command '" + std::string(argv[1]) + "'");

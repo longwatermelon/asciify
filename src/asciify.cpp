@@ -47,16 +47,9 @@ std::vector<int> asciify::generate_greyscale(int argc, char** argv, const cv::Ma
 }
 
 
-void asciify::generate_ascii(const std::vector<int>& intensities)
+std::string asciify::generate_ascii(const std::vector<int>& intensities, int& img_w)
 {
 	std::string image;
-
-	std::fstream f;
-
-	if (args::image::write_to_file)
-	{
-		f.open(args::image::output_path, std::ofstream::out | std::ofstream::trunc);
-	}
 
 	for (int i = 0; i < intensities.size(); ++i)
 	{
@@ -67,44 +60,11 @@ void asciify::generate_ascii(const std::vector<int>& intensities)
 		else if (intensities[i] >= 45) image += '.';
 		else image += ' ';
 
-		if (i % args::image::img_w == 0)
+		if (i % img_w == 0)
 		{
-			if (args::image::write_to_file)
-			{
-				f << image << "\n";
-				image.clear();
-			}
-			else
-			{
-				image += "\n";
-			}
+			image += "\n";
 		}
 	}
 
-	f.close();
-
-	if (args::image::write_to_file)
-	{
-		std::cout << "wrote output to " << args::image::output_path << "\n";
-
-		if (args::image::open)
-		{
-			system(args::image::output_path.c_str());
-		}
-	}
-	else
-	{
-		if (args::image::open)
-		{
-			std::cout << "can't open file: output was written to terminal\n";
-			exit(1);
-		}
-
-		std::cout << image << "\n";
-	}
-
-	if ((args::image::img_w >= 120 || args::image::img_h >= 200) && !args::image::write_to_file)
-	{
-		utils::print_colored("ascii output is very large, run asciify image --help for more information", 6);
-	}
+	return image;
 }
