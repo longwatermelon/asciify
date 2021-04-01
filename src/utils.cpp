@@ -45,7 +45,7 @@ void utils::get_screen_dimensions()
 
 std::string utils::make_loading_bar(int width, size_t current_num, size_t final_num)
 {
-	std::string bar = "[";
+	std::string bar = "\r[";
 
 	for (int i = 1; i < width; ++i)
 	{
@@ -62,8 +62,8 @@ std::string utils::make_loading_bar(int width, size_t current_num, size_t final_
 	bar += ']';
 
 	std::stringstream ss;
-	ss << current_num << " / " << final_num << "  (" << (float)(current_num * 100 / final_num) << "%)\r";
-	bar += "  " + ss.str();
+	ss << current_num << " / " << final_num << "  (" << (float)(current_num * 100 / final_num) << "%)";
+	bar += " " + ss.str();
 
 	return bar;
 }
