@@ -78,11 +78,6 @@ void args::parse_args(int argc, char** argv)
 			}
 		}
 
-		/*for (int i = 0; i < frames.size(); ++i)
-		{
-			std::cout << frames[i] << "\n";
-			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-		}*/
 		asciify::play_video(frames);
 
 		std::cout << "finished playing video\n";

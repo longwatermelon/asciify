@@ -31,7 +31,7 @@ namespace args
 		inline int video_w = 0;
 		inline int video_h = 0;
 
-		inline int fps = 60;
+		inline int fps = 0;
 	}
 
 

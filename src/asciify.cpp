@@ -88,6 +88,9 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 		exit(1);
 	}
 
+	if (args::video::fps == 0)
+		args::video::fps = cap.get(cv::CAP_PROP_FPS);
+
 	if (args::video::video_w == 0)
 		args::video::video_w = 400;
 	if (args::video::video_h == 0)
@@ -108,9 +111,13 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 		ascii_frames.emplace_back(generate_ascii(generate_greyscale(argc, argv, frame), args::video::video_w));
 
 		std::cout << utils::make_loading_bar((int)(0.75f * args::video::video_w), i + 1, cap.get(cv::CAP_PROP_FRAME_COUNT));
+
+		frame.release();
 	}
 
 	std::cout << "\nfinished generating frames\n";
+
+	cap.release();
 
 	return ascii_frames;
 }
