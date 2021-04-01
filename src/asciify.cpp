@@ -59,11 +59,11 @@ std::string asciify::generate_ascii(const std::vector<int>& intensities, int& im
 
 	for (int i = 0; i < intensities.size(); ++i)
 	{
-		if (intensities[i] >= 200) image += '@';
-		else if (intensities[i] >= 150) image += '#';
-		else if (intensities[i] >= 100) image += '=';
-		else if (intensities[i] >= 65) image += ':';
-		else if (intensities[i] >= 45) image += '.';
+		if (intensities[i] >= 210) image += '@';
+		else if (intensities[i] >= 170) image += '#';
+		else if (intensities[i] >= 150) image += '=';
+		else if (intensities[i] >= 90) image += ':';
+		else if (intensities[i] >= 70) image += '.';
 		else image += ' ';
 
 		if (i % img_w == 0)
@@ -77,6 +77,58 @@ std::string asciify::generate_ascii(const std::vector<int>& intensities, int& im
 
 
 std::vector<std::string> asciify::generate_video(int argc, char** argv)
+{
+	if (args::video::load_path != "")
+	{
+		return load_ascii_video();
+	}
+
+	std::vector<std::string> ascii_frames;
+
+	cv::VideoCapture cap(args::video::video_path);
+
+	if (!cap.isOpened())
+	{
+		utils::print_error("couldnt open video file '" + args::video::video_path + "'");
+		exit(1);
+	}
+
+	if (args::video::fps == 0)
+		args::video::fps = cap.get(cv::CAP_PROP_FPS);
+
+	for (int i = 0; i < cap.get(cv::CAP_PROP_FRAME_COUNT); ++i)
+	{
+		cap.set(cv::CAP_PROP_POS_FRAMES, i);
+		cv::Mat frame;
+
+		if (!cap.read(frame) || !frame.data)
+		{
+			std::cout << "\n";
+			utils::print_error("couldnt read frame " + std::to_string(i));
+			break;
+		}
+
+		ascii_frames.emplace_back(generate_ascii(generate_greyscale(argc, argv, frame), args::video::video_w));
+
+		std::cout << utils::make_loading_bar((int)(0.75f * args::video::video_w), i + 1, cap.get(cv::CAP_PROP_FRAME_COUNT));
+
+		frame.release();
+	}
+
+	std::cout << "\nfinished generating frames\n";
+
+	if (args::video::save_path != "")
+	{
+		save_ascii_video(ascii_frames);
+	}
+
+	cap.release();
+
+	return ascii_frames;
+}
+
+
+std::vector<std::string> asciify::load_ascii_video()
 {
 	std::vector<std::string> ascii_frames;
 
@@ -110,7 +162,9 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 					ss.clear();
 					ss.str("");
 
-					std::cout << "\rread " << ++read_frames << " frames";
+					std::stringstream temp;
+					temp << "\rread " << ++read_frames << " frames";
+					std::cout << temp.str();
 				}
 			}
 
@@ -127,71 +181,34 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 		}
 	}
 
-	// generate if not loaded
-	cv::VideoCapture cap(args::video::video_path);
-
-	if (!cap.isOpened())
-	{
-		utils::print_error("couldnt open video file '" + args::video::video_path + "'");
-		exit(1);
-	}
-
-	if (args::video::fps == 0)
-		args::video::fps = cap.get(cv::CAP_PROP_FPS);
-
-
-	for (int i = 0; i < cap.get(cv::CAP_PROP_FRAME_COUNT); ++i)
-	{
-		cap.set(cv::CAP_PROP_POS_FRAMES, i);
-		cv::Mat frame;
-
-		if (!cap.read(frame) || !frame.data)
-		{
-			std::cout << "\n";
-			utils::print_error("couldnt read frame " + std::to_string(i));
-			break;
-		}
-
-		ascii_frames.emplace_back(generate_ascii(generate_greyscale(argc, argv, frame), args::video::video_w));
-
-		std::cout << utils::make_loading_bar((int)(0.75f * args::video::video_w), i + 1, cap.get(cv::CAP_PROP_FRAME_COUNT));
-
-		frame.release();
-	}
-
-	std::cout << "\nfinished generating frames\n";
-
-	
-	// save
-	if (args::video::save_path != "")
-	{
-		std::cout << "saving video...\n";
-
-		{
-			std::ofstream f(args::video::save_path, std::ofstream::out | std::ofstream::trunc);
-			f.close();
-		}
-
-		std::fstream f(args::video::save_path);
-
-		f << args::video::fps << "\n";
-
-		for (int i = 0; i < ascii_frames.size(); ++i)
-		{
-			f << ascii_frames[i] << "\n";
-			std::cout << utils::make_loading_bar((int)(0.75f * args::video::video_w), i + 1, ascii_frames.size());		
-		}
-
-		f.close();
-
-		std::cout << "\n";
-		
-		std::cout << "saved video to " << args::video::save_path << " successfully\n";
-	}
-
-	cap.release();
-
 	return ascii_frames;
+}
+
+
+void asciify::save_ascii_video(const std::vector<std::string>& ascii_frames)
+{
+	std::cout << "saving video...\n";
+
+	{
+		std::ofstream f(args::video::save_path, std::ofstream::out | std::ofstream::trunc);
+		f.close();
+	}
+
+	std::fstream f(args::video::save_path);
+
+	f << args::video::fps << "\n";
+
+	for (int i = 0; i < ascii_frames.size(); ++i)
+	{
+		f << ascii_frames[i] << "\n";
+		std::cout << utils::make_loading_bar((int)(0.75f * args::video::video_w), i + 1, ascii_frames.size());
+	}
+
+	f.close();
+
+	std::cout << "\n";
+
+	std::cout << "saved video to " << args::video::save_path << " successfully\n";
 }
 
 
@@ -201,8 +218,13 @@ void asciify::play_video(std::vector<std::string>& frames)
 	SetConsoleActiveScreenBuffer(console);
 	DWORD bytes_written = 0;
 
-	for (auto& frame : frames)
+	bool key_right = false;
+	bool key_left = false;
+
+	for (int f = 0; f < frames.size(); ++f)
 	{
+		auto& frame = frames[f];
+
 		for (int i = 0; i < frame.size(); ++i)
 		{
 			if (frame[i] == '\n')
@@ -212,6 +234,21 @@ void asciify::play_video(std::vector<std::string>& frames)
 		}
 
 		WriteConsoleOutputCharacter(console, frame.c_str(), frame.size(), { 0, 0 }, &bytes_written);
+
+		if (GetAsyncKeyState(VK_RIGHT) && !key_right)
+		{
+			f += args::video::fps * 5;
+			key_right = true;
+		}
+
+		if (GetAsyncKeyState(VK_LEFT) && !key_left)
+		{
+			f -= args::video::fps * 5;
+			key_left = true;
+		}
+
+		if (GetAsyncKeyState(VK_RIGHT) == 0) key_right = false;
+		if (GetAsyncKeyState(VK_LEFT) == 0) key_left = false;
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000 / args::video::fps));
 	}
