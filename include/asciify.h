@@ -13,5 +13,5 @@ namespace asciify
 
 	std::vector<std::string> generate_video(int argc, char** argv);
 
-	void play_video(const std::vector<std::string>& frames);
+	void play_video(std::vector<std::string>& frames);
 }

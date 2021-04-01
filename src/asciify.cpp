@@ -98,7 +98,7 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 			{
 				ss << line;
 
-				if (accumulator++ >= args::video::video_h)
+				if (++accumulator >= args::video::video_h)
 				{
 					accumulator = 0;
 					ascii_frames.emplace_back(ss.str());
@@ -187,7 +187,7 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 }
 
 
-void asciify::play_video(const std::vector<std::string>& frames)
+void asciify::play_video(std::vector<std::string>& frames)
 {
 	HANDLE console = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	SetConsoleActiveScreenBuffer(console);
@@ -195,22 +195,15 @@ void asciify::play_video(const std::vector<std::string>& frames)
 
 	for (auto& frame : frames)
 	{
-		std::string screen;
-
 		for (int i = 0; i < frame.size(); ++i)
 		{
 			if (frame[i] == '\n')
 			{
-				++i;
-				screen += ' ';
-			}
-			else
-			{
-				screen += frame[i];
+				frame.erase(frame.begin() + i--);
 			}
 		}
 
-		WriteConsoleOutputCharacter(console, screen.c_str(), screen.size(), { 0, 0 }, &bytes_written);
+		WriteConsoleOutputCharacter(console, frame.c_str(), frame.size(), { 0, 0 }, &bytes_written);
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000 / args::video::fps));
 	}
