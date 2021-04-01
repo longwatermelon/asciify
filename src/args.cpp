@@ -4,6 +4,9 @@
 #include <fstream>
 #include <sstream>
 #include <Windows.h>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/core/core.hpp>
 
 
 void args::parse_args(int argc, char** argv)
@@ -21,8 +24,11 @@ void args::parse_args(int argc, char** argv)
 	}
 	else if (strcmp(argv[1], "image") == 0)
 	{
+		image::active = true;
 		cmd_image(argc, argv);
-		asciify::generate_ascii(asciify::generate_greyscale(argc, argv));
+
+		cv::Mat img = cv::imread(image::image_path);
+		asciify::generate_ascii(asciify::generate_greyscale(argc, argv, img));
 	}
 	else
 	{

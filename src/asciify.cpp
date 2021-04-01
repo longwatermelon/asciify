@@ -4,32 +4,24 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/core/core.hpp>
 
 
-std::vector<int> asciify::generate_greyscale(int argc, char** argv)
+std::vector<int> asciify::generate_greyscale(int argc, char** argv, const cv::Mat& imgtemp)
 {
-	cv::Mat imgtemp = cv::imread(args::image::image_path);
-
-	if (!imgtemp.data)
-	{
-		utils::print_error("couldnt open file '" + args::image::image_path + "'");
-		exit(1);
-	}
-
-	if (args::image::img_w == 0)
-		args::image::img_w = (int)(imgtemp.cols * args::image::resize_percent);
-	if (args::image::img_h == 0)
-		args::image::img_h = (int)(imgtemp.rows * args::image::resize_percent);
-
-	args::image::img_h /= 2;
-
 	cv::Mat img;
 
-	cv::resize(imgtemp, img, cv::Size(args::image::img_w, args::image::img_h));
+	if (args::image::active)
+	{
+		if (args::image::img_w == 0)
+			args::image::img_w = (int)(imgtemp.cols * args::image::resize_percent);
+		if (args::image::img_h == 0)
+			args::image::img_h = (int)(imgtemp.rows * args::image::resize_percent);
+
+		args::image::img_h /= 2;
+
+		cv::resize(imgtemp, img, cv::Size(args::image::img_w, args::image::img_h));
+	}
 
 	std::vector<int> intensities;
 

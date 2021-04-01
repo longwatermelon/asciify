@@ -7,6 +7,8 @@ namespace args
 {
 	namespace image
 	{
+		inline bool active = false;
+
 		inline bool open = false;
 
 		inline std::string image_path;
