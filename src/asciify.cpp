@@ -101,7 +101,9 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 				if (++accumulator >= args::video::video_h)
 				{
 					accumulator = 0;
-					ascii_frames.emplace_back(ss.str());
+					std::getline(f, line);
+
+					ascii_frames.emplace_back(ss.str() + line);
 
 					ss.clear();
 					ss.str("");
@@ -170,7 +172,7 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 
 		for (int i = 0; i < ascii_frames.size(); ++i)
 		{
-			f << ascii_frames[i];
+			f << ascii_frames[i] << "\n";
 			std::cout << utils::make_loading_bar((int)(0.75f * args::video::video_w), i + 1, ascii_frames.size());		
 		}
 
