@@ -21,12 +21,6 @@ namespace args
 	}
 
 
-	namespace video
-	{
-		inline std::string video_path;
-	}
-
-
 	void parse_args(int argc, char** argv);
 
 	void help();
@@ -37,6 +31,5 @@ namespace args
 
 	std::string argv_get(int argc, char** argv, int i);
 
-	void print_error(const std::string& err);
-	void print_colored(const std::string& text, DWORD color);
+	
 }

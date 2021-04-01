@@ -1,16 +1,24 @@
 #include "../include/asciify.h"
 #include "../include/args.h"
+#include "../include/utils.h"
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/core/core.hpp>
 
 
 std::vector<int> asciify::generate_greyscale(int argc, char** argv)
 {
 	cv::Mat imgtemp = cv::imread(args::image::image_path);
+
+	if (!imgtemp.data)
+	{
+		utils::print_error("couldnt open file '" + args::image::image_path + "'");
+		exit(1);
+	}
 
 	if (args::image::img_w == 0)
 		args::image::img_w = (int)(imgtemp.cols * args::image::resize_percent);
@@ -105,12 +113,6 @@ void asciify::generate_ascii(const std::vector<int>& intensities)
 
 	if ((args::image::img_w >= 120 || args::image::img_h >= 200) && !args::image::write_to_file)
 	{
-		args::print_colored("ascii output is very large, run asciify image --help for more information", 6);
+		utils::print_colored("ascii output is very large, run asciify image --help for more information", 6);
 	}
-}
-
-
-void asciify::generate_video()
-{
-	std::vector<std::vector<int>> frames;
 }

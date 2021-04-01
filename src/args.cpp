@@ -1,5 +1,6 @@
 #include "../include/args.h"
 #include "../include/asciify.h"
+#include "../include/utils.h"
 #include <fstream>
 #include <sstream>
 #include <Windows.h>
@@ -25,7 +26,7 @@ void args::parse_args(int argc, char** argv)
 	}
 	else
 	{
-		print_error("unrecognized command '" + std::string(argv[1]) + "'");
+		utils::print_error("unrecognized command '" + std::string(argv[1]) + "'");
 		exit(1);
 	}
 }
@@ -35,7 +36,7 @@ void args::help()
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	print_colored("multimedia to ascii art tool", 6);
+	utils::print_colored("multimedia to ascii art tool", 6);
 
 	std::cout << "asciify image <image path> <args>: create ascii art from an image\n";
 }
@@ -45,7 +46,7 @@ std::string args::next_arg(int argc, char** argv, int& i)
 {
 	if (++i >= argc)
 	{
-		print_error(std::string(argv[i - 1]) + ": missing required argument");
+		utils::print_error(std::string(argv[i - 1]) + ": missing required argument");
 
 		exit(1);
 	}
@@ -75,7 +76,7 @@ void args::cmd_image(int argc, char** argv)
 
 		if (!temp)
 		{
-			print_error("file doesnt exist");
+			utils::print_error("file doesnt exist");
 			exit(1);
 		}
 
@@ -109,7 +110,7 @@ void args::cmd_image(int argc, char** argv)
 
 			if (image::resize_percent <= 0)
 			{
-				print_error("cant resize to 0% or less");
+				utils::print_error("cant resize to 0% or less");
 				exit(1);
 			}
 
@@ -130,7 +131,7 @@ void args::cmd_image(int argc, char** argv)
 
 		else
 		{
-			print_error("unrecognized argument '" + std::string(argv[i]) + "'");
+			utils::print_error("unrecognized argument '" + std::string(argv[i]) + "'");
 			exit(1);
 		}
 	}
@@ -139,7 +140,7 @@ void args::cmd_image(int argc, char** argv)
 
 void args::help_image()
 {
-	print_colored("image help", 6);
+	utils::print_colored("image help", 6);
 	std::cout << "-f <filename>: write ascii output to a file\n";
 	std::cout << "-s <size>: set image size to <size>x<size>\n";
 	std::cout << "-w  <width>: set image width to <width>\n";
@@ -153,29 +154,9 @@ std::string args::argv_get(int argc, char** argv, int i)
 {
 	if (i >= argc)
 	{
-		print_error("expected argument for " + std::string(argv[i - 1]));
+		utils::print_error("expected argument for " + std::string(argv[i - 1]));
 		exit(1);
 	}
 
 	return argv[i];
-}
-
-
-void args::print_error(const std::string& err)
-{
-	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	SetConsoleTextAttribute(console, 4);
-	std::cout << "error: " << err << "\n";
-	SetConsoleTextAttribute(console, 7);
-}
-
-
-void args::print_colored(const std::string& text, DWORD color)
-{
-	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	SetConsoleTextAttribute(console, color);
-	std::cout << text << "\n";
-	SetConsoleTextAttribute(console, 7);
 }

@@ -6,8 +6,10 @@ add_executable(asciify
   src/main.cpp
   src/args.cpp
   src/asciify.cpp
+  src/utils.cpp
   include/args.h
   include/asciify.h
+  include/utils.h
 )
 
 set_property(TARGET asciify PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
