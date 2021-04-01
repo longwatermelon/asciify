@@ -32,6 +32,9 @@ namespace args
 		inline int video_h = 0;
 
 		inline int fps = 0;
+
+		inline std::string save_path;
+		inline std::string load_path;
 	}
 
 

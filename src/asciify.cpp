@@ -80,6 +80,46 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 {
 	std::vector<std::string> ascii_frames;
 
+	if (args::video::load_path != "")
+	{
+		std::ifstream f(args::video::load_path);
+
+		if (f)
+		{
+			std::stringstream ss;
+			std::string line;
+
+			std::getline(f, line);
+			std::stringstream(line) >> args::video::fps;
+
+			int accumulator = 0;
+
+			while (std::getline(f, line))
+			{
+				ss << line;
+
+				if (++accumulator >= args::video::video_h)
+				{
+					accumulator = 0;
+					ascii_frames.emplace_back(ss.str());
+
+					ss.clear();
+					ss.str("");
+				}
+			}
+
+			f.close();
+
+			return ascii_frames;
+		}
+		else
+		{
+			utils::print_error("file '" + args::video::load_path + "' doesnt exist");
+			exit(1);
+		}
+	}
+
+	// generate if not loaded
 	cv::VideoCapture cap(args::video::video_path);
 
 	if (!cap.isOpened())
@@ -91,10 +131,6 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 	if (args::video::fps == 0)
 		args::video::fps = cap.get(cv::CAP_PROP_FPS);
 
-	if (args::video::video_w == 0)
-		args::video::video_w = 400;
-	if (args::video::video_h == 0)
-		args::video::video_h = 200;
 
 	for (int i = 0; i < cap.get(cv::CAP_PROP_FRAME_COUNT); ++i)
 	{
@@ -117,6 +153,34 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 
 	std::cout << "\nfinished generating frames\n";
 
+	
+	// save
+	if (args::video::save_path != "")
+	{
+		std::cout << "saving video...\n";
+
+		{
+			std::ofstream f(args::video::save_path, std::ofstream::out | std::ofstream::trunc);
+			f.close();
+		}
+
+		std::fstream f(args::video::save_path);
+
+		f << args::video::fps << "\n";
+
+		for (int i = 0; i < ascii_frames.size(); ++i)
+		{
+			f << ascii_frames[i];
+			std::cout << utils::make_loading_bar((int)(0.75f * args::video::video_w), i + 1, ascii_frames.size());		
+		}
+
+		f.close();
+
+		std::cout << "\n";
+		
+		std::cout << "saved video to " << args::video::save_path << " successfully\n";
+	}
+
 	cap.release();
 
 	return ascii_frames;
@@ -133,7 +197,14 @@ void asciify::play_video(const std::vector<std::string>& frames)
 	{
 		std::string screen;
 
-		for (int i = 2; i < frame.size(); ++i)
+		int i = 0;
+
+		if (args::video::load_path == "")
+		{
+			i = 2;
+		}
+
+		for (; i < frame.size(); ++i)
 		{
 			if (frame[i] == '\n')
 			{

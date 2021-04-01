@@ -73,7 +73,6 @@ void args::parse_args(int argc, char** argv)
 
 			if (resp != "y")
 			{
-				std::cout << "ending process\n";
 				exit(1);
 			}
 		}
@@ -249,6 +248,14 @@ void args::cmd_video(int argc, char** argv)
 		{
 			std::stringstream(next_arg(argc, argv, i)) >> video::fps;
 		}
+		else if (strcmp(argv[i], "-s") == 0)
+		{
+			video::save_path = next_arg(argc, argv, i);
+		}
+		else if (strcmp(argv[i], "-l") == 0)
+		{
+			video::load_path = next_arg(argc, argv, i);
+		}
 		else
 		{
 			utils::print_error("unrecognized argument '" + std::string(argv[i]) + "'");
@@ -262,7 +269,9 @@ void args::help_video()
 {
 	utils::print_colored("video help", 6);
 	std::cout << "asciify video <video path> <args>\n";
-	std::cout << "-f <fps>: set fps of output video\n";
+	std::cout << "-f <fps>: set fps of output video, default set to original video fps\n";
+	std::cout << "-s <save path>: saves ascii video to a file\n";
+	std::cout << "-l <load path>: loads ascii video from a file\n";
 }
 
 
