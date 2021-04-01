@@ -98,7 +98,7 @@ std::vector<std::string> asciify::generate_video(int argc, char** argv)
 			{
 				ss << line;
 
-				if (++accumulator >= args::video::video_h)
+				if (accumulator++ >= args::video::video_h)
 				{
 					accumulator = 0;
 					ascii_frames.emplace_back(ss.str());
@@ -197,22 +197,12 @@ void asciify::play_video(const std::vector<std::string>& frames)
 	{
 		std::string screen;
 
-		int i = 0;
-
-		if (args::video::load_path == "")
-		{
-			i = 2;
-		}
-
-		for (; i < frame.size(); ++i)
+		for (int i = 0; i < frame.size(); ++i)
 		{
 			if (frame[i] == '\n')
 			{
-				while (i % args::video::video_w != 0 && frame[i] != '\n')
-				{
-					++i;
-					screen += ' ';
-				}
+				++i;
+				screen += ' ';
 			}
 			else
 			{
