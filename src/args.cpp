@@ -54,6 +54,40 @@ void args::parse_args(int argc, char** argv)
 		}
 	}
 
+	else if (strcmp(argv[1], "video") == 0)
+	{
+		video::active = true;
+
+		utils::get_screen_dimensions();
+
+		cmd_video(argc, argv);
+
+		utils::print_warning("warning: ascii video size will be the same as the current terminal size (" + std::to_string(args::video::video_w) + " x " + std::to_string(args::video::video_h) + ")");
+
+		std::vector<std::string> frames = asciify::generate_video(argc, argv);
+
+		std::cout << "play video? (y/n) ";
+		{
+			std::string resp;
+			std::getline(std::cin, resp);
+
+			if (resp != "y")
+			{
+				std::cout << "ending process\n";
+				exit(1);
+			}
+		}
+
+		/*for (int i = 0; i < frames.size(); ++i)
+		{
+			std::cout << frames[i] << "\n";
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		}*/
+		asciify::play_video(frames);
+
+		std::cout << "finished playing video\n";
+	}
+
 	else
 	{
 		utils::print_error("unrecognized command '" + std::string(argv[1]) + "'");
@@ -92,7 +126,7 @@ void args::cmd_image(int argc, char** argv)
 	else
 	{
 		help_image();
-		exit(1);
+		exit(0);
 	}
 
 	if (image::image_path == "--help")
@@ -177,6 +211,63 @@ void args::help_image()
 	std::cout << "-h <height>: set image height to <height>\n";
 	std::cout << "-rs <resize percent>: resize image to percentage of its original size. -rs 75 resizes the image to 75%\n";
 	std::cout << "--open: opens file automatically after writing output\n";
+}
+
+
+void args::cmd_video(int argc, char** argv)
+{
+	if (argc >= 3)
+		video::video_path = argv_get(argc, argv, 2);
+	else
+	{
+		help_video();
+		exit(0);
+	}
+
+	if (video::video_path == "--help")
+	{
+		help_video();
+		exit(0);
+	}
+
+	{
+		std::ifstream temp(video::video_path);
+
+		if (!temp)
+		{
+			utils::print_error("file '" + video::video_path + "' doesnt exist");
+			exit(1);
+		}
+
+		temp.close();
+	}
+
+	int i = 3;
+	while (i < argc)
+	{
+		if (strcmp(argv[i], "--help") == 0)
+		{
+			help_video();
+			exit(0);
+		}
+		else if (strcmp(argv[i], "-f") == 0)
+		{
+			std::stringstream(next_arg(argc, argv, i)) >> video::fps;
+		}
+		else
+		{
+			utils::print_error("unrecognized argument '" + std::string(argv[i]) + "'");
+			exit(1);
+		}
+	}
+}
+
+
+void args::help_video()
+{
+	utils::print_colored("video help", 6);
+	std::cout << "asciify video <video path> <args>\n";
+	std::cout << "-f <fps>: set fps of output video\n";
 }
 
 

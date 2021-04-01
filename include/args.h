@@ -22,6 +22,18 @@ namespace args
 		inline float resize_percent = 1.f;
 	}
 
+	namespace video
+	{
+		inline bool active = false;
+
+		inline std::string video_path;
+
+		inline int video_w = 0;
+		inline int video_h = 0;
+
+		inline int fps = 60;
+	}
+
 
 	void parse_args(int argc, char** argv);
 
@@ -31,7 +43,8 @@ namespace args
 	void cmd_image(int argc, char** argv);
 	void help_image();
 
-	std::string argv_get(int argc, char** argv, int i);
+	void cmd_video(int argc, char** argv);
+	void help_video();
 
-	
+	std::string argv_get(int argc, char** argv, int i);
 }
