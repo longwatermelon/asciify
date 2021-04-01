@@ -129,6 +129,8 @@ void args::cmd_image(int argc, char** argv)
 		exit(0);
 	}
 
+	int i = 3;
+
 	{
 		std::ifstream temp(image::image_path);
 
@@ -141,7 +143,6 @@ void args::cmd_image(int argc, char** argv)
 		temp.close();
 	}
 
-	int i = 3;
 	while (i < argc)
 	{
 		if (strcmp(argv[i], "-f") == 0)
@@ -224,6 +225,14 @@ void args::cmd_video(int argc, char** argv)
 		exit(0);
 	}
 
+	int i = 3;
+
+	if (video::video_path == "-l")
+	{
+		i = 2;
+	}
+
+	if (i == 3)
 	{
 		std::ifstream temp(video::video_path);
 
@@ -236,7 +245,6 @@ void args::cmd_video(int argc, char** argv)
 		temp.close();
 	}
 
-	int i = 3;
 	while (i < argc)
 	{
 		if (strcmp(argv[i], "--help") == 0)
