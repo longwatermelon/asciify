@@ -220,6 +220,9 @@ void asciify::play_video(std::vector<std::string>& frames)
 
 	bool key_right = false;
 	bool key_left = false;
+	bool key_space = false;
+
+	bool paused = false;
 
 	for (int f = 0; f < frames.size(); ++f)
 	{
@@ -249,6 +252,27 @@ void asciify::play_video(std::vector<std::string>& frames)
 
 		if (GetAsyncKeyState(VK_RIGHT) == 0) key_right = false;
 		if (GetAsyncKeyState(VK_LEFT) == 0) key_left = false;
+
+		if (GetAsyncKeyState(VK_SPACE) && !key_space)
+		{
+			paused = true;
+			key_space = true;
+		}
+
+		while (paused)
+		{
+			if (GetAsyncKeyState(VK_SPACE) == 0) key_space = false;
+
+			if (GetAsyncKeyState(VK_SPACE) && !key_space)
+			{
+				paused = false;
+				key_space = true;
+			}
+		}
+
+		if (GetAsyncKeyState(VK_SPACE) == 0) key_space = false;
+
+		if (GetAsyncKeyState(VK_ESCAPE)) return;
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000 / args::video::fps));
 	}

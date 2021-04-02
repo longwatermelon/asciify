@@ -66,6 +66,11 @@ void args::parse_args(int argc, char** argv)
 
 		std::vector<std::string> frames = asciify::generate_video(argc, argv);
 
+		std::cout << "=== video controls ===\n";
+		std::cout << "ESC to exit the video\n";
+		std::cout << "space to toggle between pause and resume\n";
+		std::cout << "left and right arrow keys to fast forward and backwards through the video\n";
+
 		std::cout << "play video? (y/n) ";
 		{
 			std::string resp;
