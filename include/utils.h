@@ -12,4 +12,6 @@ namespace utils
 	void get_screen_dimensions();
 
 	std::string make_loading_bar(int width, size_t current_num, size_t final_num);
+
+	void log(const std::string& fp, const std::string& text);
 }

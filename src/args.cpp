@@ -264,6 +264,10 @@ void args::cmd_video(int argc, char** argv)
 		{
 			video::save_path = next_arg(argc, argv, i);
 		}
+		else if (strcmp(argv[i], "-a") == 0)
+		{
+			video::audio_path = next_arg(argc, argv, i);
+		}
 		else
 		{
 			utils::print_error("unrecognized argument '" + std::string(argv[i]) + "'");
@@ -280,6 +284,7 @@ void args::help_video()
 	std::cout << "if video path ends in .txt, asciify will automatically load a previously saved ascii video to increase loading speed\n";
 	std::cout << "-f <fps>: set fps of output video, default set to original video fps\n";
 	std::cout << "-s <save path>: saves ascii video to a file, must be a .txt file or else asciify wont automatically pick up on an existing ascii file\n";
+	std::cout << "-a <audio path>: path to audio for the video\n";
 }
 
 

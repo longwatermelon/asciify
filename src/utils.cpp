@@ -2,6 +2,7 @@
 #include "../include/args.h"
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 
 void utils::print_error(const std::string& err)
@@ -66,4 +67,12 @@ std::string utils::make_loading_bar(int width, size_t current_num, size_t final_
 	bar += " " + ss.str();
 
 	return bar;
+}
+
+
+void utils::log(const std::string& fp, const std::string& text)
+{
+	std::ofstream of(fp, std::ios_base::app);
+	of << text << "\n";
+	of.close();
 }

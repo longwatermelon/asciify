@@ -214,6 +214,13 @@ void asciify::save_ascii_video(const std::vector<std::string>& ascii_frames)
 
 void asciify::play_video(std::vector<std::string>& frames)
 {
+	if (args::video::audio_path != "")
+	{
+		system(args::video::audio_path.c_str());
+	}
+
+	std::chrono::high_resolution_clock::time_point tp2 = std::chrono::high_resolution_clock::now();
+
 	HANDLE console = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	SetConsoleActiveScreenBuffer(console);
 	DWORD bytes_written = 0;
@@ -223,6 +230,8 @@ void asciify::play_video(std::vector<std::string>& frames)
 	bool key_space = false;
 
 	bool paused = false;
+
+	std::chrono::high_resolution_clock::time_point tp0 = std::chrono::high_resolution_clock::now();
 
 	for (int f = 0; f < frames.size(); ++f)
 	{
@@ -274,6 +283,18 @@ void asciify::play_video(std::vector<std::string>& frames)
 
 		if (GetAsyncKeyState(VK_ESCAPE)) return;
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000 / args::video::fps));
+		double frame_time = (1000.0 * 1000.0 / (double)(args::video::fps)) * (f + 1);
+
+		tp2 = std::chrono::high_resolution_clock::now();
+		
+		auto delta = std::chrono::duration<double, std::micro>(tp2 - tp0);
+
+		if (frame_time - delta.count() >= 0)
+		{
+			std::chrono::duration<double, std::micro> delta_us(frame_time - delta.count());
+			auto delta_us_duration = std::chrono::duration_cast<std::chrono::microseconds>(delta_us);
+
+			std::this_thread::sleep_for(std::chrono::microseconds(delta_us_duration.count()));
+		}
 	}
 }

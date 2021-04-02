@@ -35,6 +35,8 @@ namespace args
 
 		inline std::string save_path;
 		inline std::string load_path;
+
+		inline std::string audio_path;
 	}
 
 
