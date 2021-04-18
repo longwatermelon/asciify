@@ -102,6 +102,7 @@ void args::help()
 	utils::print_colored("multimedia to ascii art tool", 6);
 
 	std::cout << "asciify image <image path> <args>: create ascii art from an image\n";
+	std::cout << "asciify video <video path> <args>: asciify a video\n";
 }
 
 
