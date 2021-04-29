@@ -30,28 +30,7 @@ void args::parse_args(int argc, char** argv)
 
 		cv::Mat img = cv::imread(image::image_path);
 		
-		if (args::image::write_to_file)
-		{
-			std::fstream f(args::image::output_path, std::ofstream::out | std::ofstream::trunc);
-			f << asciify::generate_ascii(asciify::generate_greyscale(argc, argv, img), args::image::img_w);
-			f.close();
-
-			std::cout << "wrote output to " << args::image::output_path << "\n";
-
-			if (args::image::open)
-			{
-				system(args::image::output_path.c_str());
-			}
-		}
-		else
-		{
-			std::cout << asciify::generate_ascii(asciify::generate_greyscale(argc, argv, img), args::image::img_w) << "\n";
-
-			if (args::image::img_w >= 120 || args::image::img_h >= 200)
-			{
-				utils::print_colored("ascii output is very large, run asciify image --help for more information", 6);
-			}
-		}
+		std::cout << asciify::generate_ascii(asciify::generate_greyscale(argc, argv, img), args::image::img_w) << "\n";
 	}
 
 	else if (strcmp(argv[1], "video") == 0)
@@ -151,13 +130,7 @@ void args::cmd_image(int argc, char** argv)
 
 	while (i < argc)
 	{
-		if (strcmp(argv[i], "-f") == 0)
-		{
-			image::write_to_file = true;
-			image::output_path = next_arg(argc, argv, i);
-		}
-
-		else if (strcmp(argv[i], "-s") == 0)
+		if (strcmp(argv[i], "-s") == 0)
 		{
 			std::stringstream(next_arg(argc, argv, i)) >> image::img_w;
 			image::img_h = image::img_w;
@@ -206,7 +179,6 @@ void args::cmd_image(int argc, char** argv)
 void args::help_image()
 {
 	utils::print_colored("image help", 6);
-	std::cout << "-f <filename>: write ascii output to a file\n";
 	std::cout << "-s <size>: set image size to <size>x<size>\n";
 	std::cout << "-w  <width>: set image width to <width>\n";
 	std::cout << "-h <height>: set image height to <height>\n";

@@ -13,7 +13,6 @@ namespace args
 
 		inline std::string image_path;
 
-		inline bool write_to_file = false;
 		inline std::string output_path;
 
 		inline int img_w = 0;
