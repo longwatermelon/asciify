@@ -1,9 +1,9 @@
 # asciify
 Video and image asciifier
 
+# Building
 ```
 mkdir build
 cd build
-cmake ..
+cmake .. -DCMAKE_TOOLCHAIN_FILE=path_to_vcpkg/scripts/buildsystems/vcpkg.cmake
 ```
-Make sure `CMAKE_PREFIX_PATH` is a system environment variable that contains a list of all the directories your third party libraries are stored under
