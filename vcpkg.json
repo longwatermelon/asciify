@@ -1,0 +1,7 @@
+{
+	"name": "asciify",
+	"version": "1.0",
+	"dependencies": [
+		"opencv4"
+	]
+}
