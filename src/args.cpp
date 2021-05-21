@@ -1,6 +1,6 @@
-#include "../include/args.h"
-#include "../include/asciify.h"
-#include "../include/utils.h"
+#include "args.h"
+#include "asciify.h"
+#include "utils.h"
 #include <fstream>
 #include <sstream>
 #include <Windows.h>

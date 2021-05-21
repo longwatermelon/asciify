@@ -1,6 +1,6 @@
-#include "../include/asciify.h"
-#include "../include/args.h"
-#include "../include/utils.h"
+#include "asciify.h"
+#include "args.h"
+#include "utils.h"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -214,11 +214,6 @@ void asciify::save_ascii_video(const std::vector<std::string>& ascii_frames)
 
 void asciify::play_video(std::vector<std::string>& frames)
 {
-	if (args::video::audio_path != "")
-	{
-		system(args::video::audio_path.c_str());
-	}
-
 	std::chrono::high_resolution_clock::time_point tp2 = std::chrono::high_resolution_clock::now();
 
 	HANDLE console = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
@@ -227,7 +222,7 @@ void asciify::play_video(std::vector<std::string>& frames)
 
 	bool key_right = false;
 	bool key_left = false;
-	bool key_space = false;
+	bool key_space = true; // no clue why it thinks space is being pressed when the video is first started
 
 	bool paused = false;
 
@@ -236,8 +231,6 @@ void asciify::play_video(std::vector<std::string>& frames)
 	int f = 0;
 	while (f < frames.size())
 	{
-		utils::log("log.txt", std::to_string(f));
-
 		auto& frame = frames[f];
 
 		for (int i = 0; i < frame.size(); ++i)

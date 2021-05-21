@@ -1,5 +1,5 @@
-#include "../include/asciify.h"
-#include "../include/args.h"
+#include "asciify.h"
+#include "args.h"
 
 
 int main(int argc, char** argv)
